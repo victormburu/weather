@@ -1,5 +1,13 @@
 from twilio.rest import Client
 import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
+TWILIO_SID = os.getenv("TWILIO_SID")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+TWILIO_NUMBER = os.getenv("TWILIO_NUMBER")
+TO_NUMBER = os.getenv("TO_NUMBER")
 
 def send_update(prediction_message, max_messages=1):
     if not hasattr(send_update, "message_count"):
@@ -10,23 +18,16 @@ def send_update(prediction_message, max_messages=1):
         return
     send_update.message_count += 1
     
-    TWILIO_SID = os.getenv("TWILIO_SID")
-    TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
-    TWILIO_NUMBER = os.getenv("TWILIO_NUMBER")
-    TO_NUMBER = os.getenv("TO_NUMBER")
-    
-    
     # Initialize Twilio client
-    client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
-    
+    client = Client(os.getenv("TWILIO_SID"), os.getenv("TWILIO_AUTH_TOKEN"))
     # Send the message
     msg = client.messages.create(
-        from_= TWILIO_NUMBER,
-        to = TO_NUMBER,
+        from_= os.getenv("TWILIO_NUMBER"),
+        to = os.getenv("TO_NUMBER"),
         body = prediction_message
     )
     
-    
+
     print(f"Message sent with SID: {msg.sid}")
     
     send_update(msg)
