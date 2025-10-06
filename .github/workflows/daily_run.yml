@@ -2,7 +2,7 @@ name: Daily Weather Prediction
 
 on:
   schedule:
-    - cron: "0 5 * * *"  # runs every day at 05:00 UTC (8:00 AM Kenya)
+    - cron: '0 6,14 * * *'  # Runs at 6 AM and 2 PM UTC daily
   workflow_dispatch:  # allows manual run from GitHub Actions tab
 
 jobs:
