@@ -4,12 +4,13 @@ import joblib
 from datetime import datetime
 import os
 from send_update import send_update
+from monitor_metrics import update_metrics
 
 
 
 def fetch_live_weather(api_key, city="Nairobi"):
-    url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric"
-    response = requests.get(url)
+    url = os.getenv("OPENWEATHER_API_URL", "https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric")
+    response = requests.get(url.format(city=city, api_key=api_key))
     
     if response.status_code != 200:
         print("Error fetching data:", response.status_code, response.text)
@@ -42,7 +43,7 @@ features = fetch_live_weather(api_key)
 
 if features:
     
-    model = joblib.load('rain_prediction_model.pkl')
+    model = joblib.load('./app/rain_prediction_model.pkl')
     
     cols = ['tavg','tmin','tmax',
             'prcp','snow','wdir','wspd',
@@ -72,7 +73,9 @@ if features:
         f"Rain Prediction: {'Rain' if prediction == 1 else 'No Rain'}"
     )
     send_update(prediction_message)
-                        
+    
+    #update_metrics(temperature_gauge, rain_prediction)
+    update_metrics(features[0], 'Yes Rain' if prediction == 1 else 'No Rain')
     #define log file path
     log_file = 'live_weather_log.csv'
     
@@ -99,3 +102,4 @@ if features:
     else:
         df_log.to_csv(log_file, mode='a', header=False, index=False)
     print(f"\nLogged data to {log_file}")
+    

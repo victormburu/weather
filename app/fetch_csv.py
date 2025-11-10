@@ -8,4 +8,4 @@ end = datetime(2025, 10, 5)
 
 data = Daily(nairobi, start, end)
 data = data.fetch()
-data.to_csv("../weather/nairobi_weather.csv")
+data.to_csv("../weather/app/nairobi_weather.csv")

@@ -6,7 +6,7 @@ import joblib
 
 
 # Load the dataset
-df = pd.read_csv('../weather/nairobi_weather.csv')
+df = pd.read_csv('../weather/app/nairobi_weather.csv')
 
 df['rain_flag'] = (df['prcp'] > 0).astype(int)
 # Feature engineering
@@ -37,4 +37,4 @@ cv_scores = cross_val_score(clf, X, y, cv=5)
 print("Cross-validation scores:", cv_scores)
 
 # Save the model
-joblib.dump(clf, 'rain_prediction_model.pkl')
+joblib.dump(clf, './app/rain_prediction_model.pkl')

@@ -19,17 +19,22 @@ def send_update(prediction_message, max_messages=1):
     send_update.message_count += 1
     
     # Initialize Twilio client
-    client = Client(os.getenv("TWILIO_SID"), os.getenv("TWILIO_AUTH_TOKEN"))
+    client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
     # Send the message
-    msg = client.messages.create(
-        from_= os.getenv("TWILIO_NUMBER"),
-        to = os.getenv("TO_NUMBER"),
-        body = prediction_message
-    )
-    
+    msg = None
+    try:
 
-    print(f"Message sent with SID: {msg.sid}")
+        msg = client.messages.create(
+            from_= os.getenv("TWILIO_NUMBER"),
+            to = os.getenv("TO_NUMBER"),
+            body = prediction_message
+        )
     
-    send_update(msg)
-    print("Prediction:", msg)
-    send_update(f"Weather Update for Nairobi: \n{msg}")
+        print(f"Message sent with SID: {msg.sid}")
+    except Exception as e:
+        print(f"Message send failed: {e}")
+
+    if msg:
+        print(f"Prediction sent: {prediction_message}")
+    else:
+        print(f"Prediction logged locally: {prediction_message}")
